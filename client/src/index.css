@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Montserrat" , sans-serif !important;
+}
+  
+input{
+  height: 45px !important;
+  border: 1px solid #b9b9b9 !important;
+}
+
+input:focus{
+  outline: none;
+  border: 1px solid #6a6a6a !important;
+  box-shadow: none;
+}
+
+button{
+  height: 45px !important;
+  box-shadow: none !important;
+}
+/* Add custom styles for the notification */
+.notification {
+  position: fixed;
+  top: 20px; /* Adjust top for visibility */
+  left: 50%;
+  transform: translateX(-50%); /* Center the notification horizontally */
+  background-color: #f0f0f0;
+  padding: 15px 25px; /* Increase padding for better visibility */
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 16px; /* Increase font size */
+  color: #333;
+  width: auto; /* Adjust width to fit content */
+  max-width: 90%; /* Limit width to prevent stretching on large screens */
+  text-align: center;
+  z-index: 9999; /* Ensure it's above all other content */
+  opacity: 0;
+  animation: fadeInOut 4s ease-out; /* Animation for fading */
+}
+
+.notification.success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.notification.error {
+  background-color: #f44336;
+  color: white;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
