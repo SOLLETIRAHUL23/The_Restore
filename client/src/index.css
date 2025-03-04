@@ -8,14 +8,16 @@
   padding:0;
   box-sizing:border-box;
   font-family:"Montserrat" , sans-serif !important;
+  font-size: 15px;
 }
   
-input{
-  height: 45px !important;
+input , select, textarea{
+  min-height: 45px !important;
   border: 1px solid #b9b9b9 !important;
+  width: 100% !important;
 }
 
-input:focus{
+input:focus textarea:focus select:focus{
   outline: none;
   border: 1px solid #6a6a6a !important;
   box-shadow: none;
@@ -72,4 +74,13 @@ button{
     opacity: 0;
     transform: translateX(-50%) translateY(10px);
   }
+}
+
+table{
+  border: #a1a1a1 1px solid !important;
+  border-radius: 2px;
+}
+
+i{
+  font-size: 15px !important;
 }

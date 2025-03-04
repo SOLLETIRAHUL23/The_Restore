@@ -3,6 +3,8 @@ import { Button, Form, Input, message } from "antd";
 import { Link } from "react-router-dom";
 import Divider from "../../components/Divider";
 import { LoginUser } from "../../apicalls/users";
+import { useDispatch } from "react-redux";
+import { SetLoader } from "../../redux/loadersSlice";
 
 const rules = [
   {
@@ -26,9 +28,13 @@ function Login() {
       notificationContainer.remove();
     }, 3000);
   };
+  const dispatch = useDispatch();
   const onFinish = async (values) => {
     try {
+      dispatch(SetLoader(true));
       const response = await LoginUser(values);
+      console.log(response);
+      dispatch(SetLoader(false));
 
       if (response.success === true) {
         // Show success notification
@@ -41,6 +47,7 @@ function Login() {
         console.log(response.message);
       }
     } catch (error) {
+      dispatch(SetLoader(false));
       // Show error notification in case of a network issue or other error
       showNotification("error", error.message);
       console.log(error.message);
