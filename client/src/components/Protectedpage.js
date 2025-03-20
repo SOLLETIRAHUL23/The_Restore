@@ -1,15 +1,22 @@
-import React, { useEffect } from "react";
-import { message } from "antd";
+import React, { useEffect, useState } from "react";
+import { Avatar, Badge, message } from "antd";
 import { GetCurrentUser } from "../apicalls/users";
 import { useNavigate } from "react-router-dom";
 import { SetLoader } from "../redux/loadersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { SetUser } from "../redux/usersSlice";
-
+import Notifications from "./Notifications";
+import {
+  GetAllNotifications,
+  ReadAllNotifications,
+} from "../apicalls/notifications";
 function ProtectedPage({ children }) {
+  const [notifications = [], setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const showNotification = (type, message) => {
     // Create a notification element
     const notificationContainer = document.createElement("div");
@@ -42,9 +49,37 @@ function ProtectedPage({ children }) {
     }
   };
 
+  const getNotifications = async () => {
+    try {
+      const response = await GetAllNotifications();
+
+      if (response.success) {
+        setNotifications(response.data);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const readNotifications = async () => {
+    try {
+      const response = await ReadAllNotifications();
+      if (response.success) {
+        getNotifications();
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       validateToken();
+      getNotifications();
     } else {
       navigate("/login");
       showNotification("error", "Please login to continue");
@@ -75,6 +110,22 @@ function ProtectedPage({ children }) {
             >
               {user.name}
             </span>
+            <Badge
+              count={
+                notifications?.filter((notification) => !notification.read)
+                  .length
+              }
+              onClick={() => {
+                readNotifications();
+                setShowNotifications(true);
+              }}
+              className="cursor-pointer"
+            >
+              <Avatar
+                shape="circle"
+                icon={<i class="ri-notification-fill"></i>}
+              />
+            </Badge>
             <i
               className="ri-logout-box-r-fill ml-10"
               onClick={() => {
@@ -86,6 +137,15 @@ function ProtectedPage({ children }) {
         </div>
         {/*body*/}
         <div className="p-5">{children}</div>
+
+        {
+          <Notifications
+            notifications={notifications}
+            reloadNotifications={getNotifications}
+            showNotifications={showNotifications}
+            setShowNotifications={setShowNotifications}
+          />
+        }
       </div>
     )
   );

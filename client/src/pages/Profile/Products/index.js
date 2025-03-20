@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetProducts } from "../../../apicalls/products";
 import { DeleteProduct } from "../../../apicalls/products";
 import moment from "moment";
+import Bids from "./Bids";
 
 function Products() {
+  const [showBids, setShowBids] = React.useState(false);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
   const [products, setProducts] = React.useState([]);
   const [showProductForm, setShowProductForm] = React.useState(false);
@@ -22,7 +24,7 @@ function Products() {
       });
       dispatch(SetLoader(false));
       if (response.success) {
-        setProducts(response.products);
+        setProducts(response.data);
       }
     } catch (error) {
       dispatch(SetLoader(false));
@@ -79,7 +81,7 @@ function Products() {
       dataIndex: "action",
       render: (text, record) => {
         return (
-          <div className="flex gap-5">
+          <div className="flex gap-5 items-center">
             <i
               class="ri-delete-bin-5-line"
               onClick={() => {
@@ -93,6 +95,16 @@ function Products() {
                 setShowProductForm(true);
               }}
             ></i>
+
+            <span
+              className="underline cursor-pointer"
+              onClick={() => {
+                setSelectedProduct(record);
+                setShowBids(true);
+              }}
+            >
+              showBids
+            </span>
           </div>
         );
       },
@@ -122,6 +134,13 @@ function Products() {
           setShowProductForm={setShowProductForm}
           selectedProduct={selectedProduct}
           getData={getData}
+        />
+      )}
+      {showBids && (
+        <Bids
+          showBidsModal={showBids}
+          setShowBidsModal={setShowBids}
+          selectedProduct={selectedProduct}
         />
       )}
     </div>
